@@ -1,0 +1,18 @@
+{
+    "name": "jgamb/prueba",
+    "autoload": {
+        "psr-4": {
+            "Jgamb\\Prueba\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "proyectoReactJuanOscar",
+            "email": "oscarjuliangamboasanabria@gmail.com"
+        }
+    ],
+    "require": {
+        "google/apiclient": "2.0",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
