@@ -19,7 +19,7 @@ class Gmaill extends CI_Controller
 
     private function getClient()
     {
-        $client = new Google_Client();
+        $client = new Client();
         $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
         $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
         $client->setRedirectUri('http://localhost/apigmail/gmail');
@@ -67,7 +67,7 @@ class Gmaill extends CI_Controller
     public function index()
     {
         $client = $this->getClient();
-        var_dump($_GET['code']);
+        // var_dump($_GET['code']);
         if (!isset($_GET['code'])) {
             $authUrl = $client->createAuthUrl();
             header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
@@ -82,8 +82,8 @@ class Gmaill extends CI_Controller
 
                 // andres
                 $accessToken = $this->exchangeToken($_GET['code']);
-                var_dump($accessToken);
-                die();
+                // var_dump($accessToken);
+                // die();
                 // fin andres
 
 
@@ -169,8 +169,8 @@ class Gmaill extends CI_Controller
 
 
         try {
-            var_dump($token);
-            die();
+            // var_dump($token);
+            // die();
             $client = $this->getClient();
             $client->setAccessToken($token);
 
@@ -283,9 +283,9 @@ class Gmaill extends CI_Controller
         if (!$accessToken) {
             die("Error: No hay token de acceso. Autentícate nuevamente.");
         }
-        echo $accessToken;
-        echo "<br>";
-        echo $refreshToken;
+        // echo $accessToken;
+        // echo "<br>";
+        // echo $refreshToken;
         $client->setAccessToken($accessToken);
         if ($client->isAccessTokenExpired()) {
             echo "a";
