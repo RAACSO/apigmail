@@ -19,7 +19,7 @@ class Gmail extends CI_Controller {
         // Configurar las credenciales usando las variables de entorno
         $client->setClientId($_ENV['GOOGLE_CLIENT_ID']); // Client ID desde .env
         $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']); // Client Secret desde .env
-        $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']); // Redirect URI desde .env
+        $client->setRedirectUri('http://localhost/apigmail/gmail'); // Redirect URI desde .env
 
         // Añadir los scopes necesarios
         $client->addScope(Google_Service_Gmail::GMAIL_READONLY);
@@ -29,6 +29,7 @@ class Gmail extends CI_Controller {
         $client->setAccessType('offline');
         $client->setPrompt('select_account consent');
 
+        
         // Verificar si hay un código de autorización en la URL
         if (isset($_GET['code'])) {
             // Autenticar al cliente con el código de autorización
@@ -36,7 +37,8 @@ class Gmail extends CI_Controller {
 
             // Obtener el token de acceso
             $accessToken = $client->getAccessToken();
-
+            var_dump( $accessToken);
+            die();
             // Guardar el token de acceso en la sesión
             $this->session->set_userdata('access_token', $accessToken);
 
