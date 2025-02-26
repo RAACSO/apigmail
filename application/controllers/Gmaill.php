@@ -61,12 +61,13 @@ class Gmaill extends CI_Controller
 
         return json_decode($result, true);
     }
+    
 
 
     public function index()
     {
         $client = $this->getClient();
-
+        var_dump($_GET['code']);
         if (!isset($_GET['code'])) {
             $authUrl = $client->createAuthUrl();
             header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
@@ -75,7 +76,6 @@ class Gmaill extends CI_Controller
 
         if (isset($_GET['code'])) {
             try {
-                die('hola');
                 // julian
                 // $accessToken = $this->getAccessToken($_GET['code']);
                 // finJulian
