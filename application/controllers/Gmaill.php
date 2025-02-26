@@ -19,11 +19,13 @@ class Gmaill extends CI_Controller
 
     private function getClient()
     {
-        $client = new Google_Client();
+        $client = new Client();
         $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+
         $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
         $client->setRedirectUri('http://localhost/apigmail/gmail');
-        $client->addScope(Google_Service_Gmail::GMAIL_MODIFY);
+        $client->setScopes([Google_Service_Gmail::GMAIL_READONLY]);
+        // $client->addScope(Google_Service_Gmail::GMAIL_MODIFY);
         $client->setAccessType('offline'); // 🔴 Para obtener refresh_token
         $client->setPrompt('consent'); // 🔴 Forzar para recibir siempre refresh_token
 
@@ -61,29 +63,22 @@ class Gmaill extends CI_Controller
 
         return json_decode($result, true);
     }
-    
+
 
 
     public function index()
     {
         $client = $this->getClient();
-        var_dump($_GET['code']);
+
         if (!isset($_GET['code'])) {
             $authUrl = $client->createAuthUrl();
             header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
-            exit;
-        }
-
-        if (isset($_GET['code'])) {
+      
             try {
-                // julian
-                // $accessToken = $this->getAccessToken($_GET['code']);
-                // finJulian
+                
 
                 // andres
-                $accessToken = $this->exchangeToken($_GET['code']);
-                var_dump($accessToken);
-                die();
+                 $accessToken = $this->exchangeToken($_GET['code']);
                 // fin andres
 
 
@@ -101,27 +96,10 @@ class Gmaill extends CI_Controller
                 if (!$accessToken) {
                     die("Error: No hay token de acceso. Autentícate nuevamente.");
                 }
-                // julian
-                // $client->setAccessToken(json_encode($accessToken));
-                // finJulian
 
-                // andres
-                $this->getEmail($accessToken);
-                // finAndres
+                 $this->getEmail($accessToken);
 
-                // julian    
-                // $service = new Google_Service_Gmail($client);
-
-                // $messagesResponse = $service->users_messages->listUsersMessages('me', ['maxResults' => 10]);
-
-
-                // if (!$messagesResponse || !isset($messagesResponse->messages)) {
-                //     die("Error: No se pudieron obtener los correos.");
-                // }
-
-                // $data['messages'] = $messagesResponse->getMessages();
-                // $this->load->view('gmail_inbox', $data);
-                // FinJulian
+                
                 //  redirect('gmail/inbox');
 
             } catch (Exception $e) {
@@ -132,7 +110,64 @@ class Gmaill extends CI_Controller
             redirect($authUrl);
         }
     }
+    // public function index()
+    // {
+    //     $client = $this->getClient();
 
+
+    //     if (!isset($_GET['code'])) {
+    //         $authUrl = $client->createAuthUrl();
+    //         header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
+    //         exit;
+    //     }
+
+    //     if (isset($_GET['code'])) {
+    //         try {
+    //             // Obtener el token de acceso
+    //             $accessToken = $this->getAccessToken($_GET['code']);
+
+    //             // Verificar si el token es válido
+    //             if (!isset($accessToken['access_token'])) {
+    //                 die("Error: No se pudo obtener el token de acceso.");
+    //             }
+
+    //             // Guardar tokens en sesión
+    //             $this->session->set_userdata('access_token', $accessToken['access_token']);
+
+    //             if (isset($accessToken['refresh_token'])) {
+    //                 $this->session->set_userdata('refresh_token', $accessToken['refresh_token']);
+    //             }
+
+    //             // Configurar el token de acceso en el cliente
+    //             $client->setAccessToken($accessToken); // Envía el token como array
+
+    //             // Crear el servicio de Gmail
+    //             $service = new Google_Service_Gmail($client);
+    //             // var_dump("<br>");
+    //             // var_dump($client->getAccessToken());
+
+
+    //             // Obtener los mensajes
+
+                
+    //             $optParams = [1];
+                
+    //             $messagesResponse = $service->users_messages->listUsersMessages('me',$optParams);
+                
+    //             if (!$messagesResponse || !isset($messagesResponse->messages)) {
+    //                 die("Error: No se pudieron obtener los correos.");
+    //             }
+    //             $data['messages'] = $messagesResponse->getMessages();
+    //             // $this->load->view('gmail_inbox', $data);
+
+    //         } catch (Exception $e) {
+    //             die("Error al autenticar: a" . $e->getMessage());
+    //         }
+    //     } else {
+    //         $authUrl = $client->createAuthUrl();
+    //         redirect($authUrl);
+    //     }
+    // }
     // andres
     public function exchangeToken($code)
     {
@@ -271,9 +306,9 @@ class Gmaill extends CI_Controller
         }
         return "Sin asunto";
     }
-// fin ia no implementado
+    // fin ia no implementado
 
-// ia re escrito inbox e idex en uno solo linea 101
+    // ia re escrito inbox e idex en uno solo linea 101
     public function inbox()
     {
         $client = $this->getClient();
@@ -308,9 +343,9 @@ class Gmaill extends CI_Controller
         $data['messages'] = $messagesResponse->getMessages();
         $this->load->view('gmail_inbox', $data);
     }
-// fin ia re escrito
+    // fin ia re escrito
 
-// no sirve
+    // no sirve
     private function refreshAccessToken($refreshToken)
     {
         $client_id = $_ENV['GOOGLE_CLIENT_ID'];
